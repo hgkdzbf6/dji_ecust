@@ -17,6 +17,7 @@
 #include <geometry_msgs/QuaternionStamped.h>
 #include <geometry_msgs/Vector3Stamped.h>
 #include <sensor_msgs/NavSatFix.h>
+#include <sensor_msgs/Imu.h>
 #include <std_msgs/UInt8.h>
 
 // DJI SDK includes
@@ -94,6 +95,8 @@ void flight_status_callback(const std_msgs::UInt8::ConstPtr& msg);
 void gps_callback(const sensor_msgs::NavSatFix::ConstPtr& msg);
 
 void attitude_callback(const geometry_msgs::QuaternionStamped::ConstPtr& msg);
+
+void imu_callback(const sensor_msgs::Imu::ConstPtr& msg);
 
 bool takeoff_land(int task);
 

@@ -28,6 +28,15 @@ uint8_t display_mode  = 255;
 sensor_msgs::NavSatFix current_gps;
 geometry_msgs::Quaternion current_atti;
 
+
+// 以下是IMU数据
+// IMU 数据里面还是有别的东西的
+// 比如时间戳啥的.
+
+geometry_msgs::Quaternion  imu_attitude;
+geometry_msgs::Vector3     imu_angular_vel;
+geometry_msgs::Vector3     imu_linear_accel;
+
 Mission square_mission;
 
 
@@ -41,6 +50,8 @@ int main(int argc, char** argv)
   ros::Subscriber gpsSub      = nh.subscribe("dji_sdk/gps_position", 10, &gps_callback);
   ros::Subscriber flightStatusSub = nh.subscribe("dji_sdk/flight_status", 10, &flight_status_callback);
   ros::Subscriber displayModeSub = nh.subscribe("dji_sdk/display_mode", 10, &display_mode_callback);
+  //这边需要订阅IMU数据了   
+  ros::Subscriber imuSub      = nh.subscribe("dji_sdk/imu",10,&imu_callback);
 
   // Publish the control signal
   ctrlPosYawPub = nh.advertise<sensor_msgs::Joy>("/dji_sdk/flight_control_setpoint_ENUposition_yaw", 10);
@@ -356,6 +367,12 @@ void display_mode_callback(const std_msgs::UInt8::ConstPtr& msg)
   display_mode = msg->data;
 }
 
+void imu_callback(const sensor_msgs::Imu::ConstPtr& msg){
+  imu_angular_vel=msg->angular_velocity;
+  imu_attitude=msg->orientation;
+  imu_linear_accel=msg->linear_acceleration;
+  ROS_INFO("%lf, %lf, %lf.",imu_angular_vel.x,imu_angular_vel.y,imu_angular_vel.z);
+}
 
 /*!
  * This function demos how to use the flight_status
